@@ -1,0 +1,223 @@
+{
+  "embedding_dim": 384,
+  "texts": [
+    "# INDECIMAL — Company Overview & Customer Journey (Internal Reference) Audience: Support, Sales, Product, and AI Assistant Knowledge Base Indecimal provides end-to-end home construction support with transparent pricing, quality assurance, and structured project tracking from inquiry to handover. ## 2) What Indecimal Promises (Customer-Facing Commitments) - Indecimal positions its offering as building “confidence” through commitment, not just contracts.",
+    "## 2) What Indecimal Promises (Customer-Facing Commitments) - Indecimal positions its offering as building “confidence” through commitment, not just contracts. - The approach emphasizes clarity and trust across the construction and ownership journey. ## 3) What We Strive For (Operating Principles) Smooth Construction Experience - Step-by-step support throughout the project. - Fair pricing with no hidden charges. Quality Assurance (445+ checks) - Strict quality control at every construction stage.",
+    "Quality Assurance (445+ checks) - Strict quality control at every construction stage. Stage-Based Contractor Payments - Payments released only after verified completion. - Clear agreements and real-time online project monitoring. ## 4) Differentiators Highlighted on the Website Indecimal highlights the following as key differentiators versus typical market alternatives: - Warranty & post-delivery support: long-term warranty/maintenance commitments. - Transparency: 100% transparent pricing and process.",
+    "- Warranty & post-delivery support: long-term warranty/maintenance commitments. - Transparency: 100% transparent pricing and process. - Timelines: fixed project timelines, with penalties for delays. - Quality assurance: branded materials and on-site quality checks. - Updates: real-time project tracking dashboard and visibility. ## 5) Customer Journey (“How We Work”) The publicly described journey is structured in stages so customers know what happens next:",
+    "## 5) Customer Journey (“How We Work”) The publicly described journey is structured in stages so customers know what happens next: - Customer shares plot details and vision; team connects to start. - Consultation with architects and construction specialists. - Guidance through steps from documentation to disbursal (where applicable). - Collaborative architectural design tailored to the family’s needs. - Detailed design + cost plans with transparent pricing.",
+    "- Collaborative architectural design tailored to the family’s needs. - Detailed design + cost plans with transparent pricing. - Customer confirms the project with milestone-based payments and clear timelines. 7) Real-time construction progress - Stage-by-stage tracking with live photo updates through the app/dashboard. - Optional interiors journey: concept-to-completion customization. - Handover with maintenance and structural warranty positioning.",
+    "- Optional interiors journey: concept-to-completion customization. - Handover with maintenance and structural warranty positioning. - Post-handover maintenance support as part of Indecimal’s long-term care positioning. ## 6) FAQs (for the AI Assistant) Q: Do you provide real-time progress visibility? A: Indecimal’s public flow mentions real-time construction progress tracking with live photo updates through their app/dashboard. Q: How does Indecimal reduce hidden surprises in pricing?",
+    "A: Indecimal’s public flow mentions real-time construction progress tracking with live photo updates through their app/dashboard. Q: How does Indecimal reduce hidden surprises in pricing? A: The flow emphasizes receiving plans that include detailed design and cost plans with transparent pricing and “no hidden surprises.” Q: What makes contractor payments “stage-based”? A: The “Why Us” section states payments are released only after verified completion.",
+    "# INDECIMAL — Package Comparison & Specification Wallets (Internal Reference) Audience: Sales, Estimation, AI Assistant Knowledge Base ## 1) Package Pricing (Indicative / Per Sqft) These are shown as per-sqft package rates (inclusive of GST) on the public comparison page: - Essential: ₹1,851 /sqft (incl. - Premier (Most Popular): ₹1,995 /sqft (incl. - Infinia: ₹2,250 /sqft (incl. - Pinnacle: ₹2,450 /sqft (incl. ## 2) Structure Specifications (Highlights)",
+    "- Pinnacle: ₹2,450 /sqft (incl. ## 2) Structure Specifications (Highlights) - Essential: Sunvik, Kamadhenu, or equivalent up to ₹68,000/MT - Premier: JSW or Jindal Neo up to ₹74,000/MT - Infinia: JSW or Jindal Panther up to ₹75,000/MT - Pinnacle: TATA or equivalent up to ₹80,000/MT ### Cement (43 grade surface & 53 grade core) - Essential: Dalmia, Bharthi, or equivalent up to ₹370/bag - Premier: Dalmia, Bharthi, or equivalent up to ₹370/bag - Infinia: Birla Super, Ramco, or equivalent up to ₹390/bag",
+    "- Premier: Dalmia, Bharthi, or equivalent up to ₹370/bag - Infinia: Birla Super, Ramco, or equivalent up to ₹390/bag - Pinnacle: ACC, Ultratech, Ramco, or equivalent up to ₹400/bag - 20mm & 40mm aggregates across all packages. - Solid concrete blocks 6\" (external) & 4\" (internal) - 6\": up to ₹40 (+/- ₹3) per block - 4\": up to ₹33 (+/- ₹3) per block - M20 or M25 (RCC design mix as advised by the structural engineer) - Floor-to-floor height: 10 ft (across packages) ## 3) Kitchen (Wallet Allowances)",
+    "- Floor-to-floor height: 10 ft (across packages) ## 3) Kitchen (Wallet Allowances) Note: The page states fittings can be customized at cost. ### Sink (Futura or equivalent) - Essential: up to ₹4,000 (single bowl) - Premier: up to ₹7,000 (single bowl) - Infinia: up to ₹9,000 (single bowl with drain board) - Pinnacle: up to ₹10,000 (single bowl with drain board) - Essential: Parryware/Hindware or equivalent up to ₹2,000 - Premier: Parryware/Hindware or equivalent up to ₹2,500",
+    "- Essential: Parryware/Hindware or equivalent up to ₹2,000 - Premier: Parryware/Hindware or equivalent up to ₹2,500 - Infinia: Jaquar/Essco or equivalent up to ₹3,500 - Pinnacle: Jaquar/Essco or equivalent up to ₹4,000 ## 4) Bathroom (Wallet Allowances) Note: The page states fittings can be customized at cost. ### Sanitary & CP Fittings (per 1000 sqft) - Essential: up to ₹32,000 (Cera, Hindware / equivalent) - Premier: up to ₹50,000 (Parryware / equivalent)",
+    "- Essential: up to ₹32,000 (Cera, Hindware / equivalent) - Premier: up to ₹50,000 (Parryware / equivalent) - Infinia: up to ₹70,000 (Jaquar / Essco / equivalent) - Pinnacle: up to ₹80,000 (Kohler / equivalent) - Essential: APL Apollo / Ashirwad / equivalent - Premier: APL Apollo / Ashirwad / equivalent - Infinia: APL Apollo / Ashirwad / Supreme / Astral or equivalent - Pinnacle: APL Apollo / Ashirwad / Supreme / Astral or equivalent ## 5) Doors & Windows (Highlights)",
+    "- Pinnacle: APL Apollo / Ashirwad / Supreme / Astral or equivalent ## 5) Doors & Windows (Highlights) ### Main Door (Wallet Amount; includes fittings & labour) - Essential: Panelled door; wallet up to ₹20,000 - Premier: Teak door; wallet up to ₹30,000 - Infinia: Teak door; wallet up to ₹40,000 - Pinnacle: Teak door; wallet up to ₹50,000 ### Windows (3-track with mosquito mesh) — Wallet per sqft - Essential: Aluminium/UPVC up to ₹440/sqft - Premier: UPVC up to ₹500/sqft (Lesso eiti or equivalent)",
+    "- Essential: Aluminium/UPVC up to ₹440/sqft - Premier: UPVC up to ₹500/sqft (Lesso eiti or equivalent) - Infinia: UPVC up to ₹600/sqft - Pinnacle: UPVC up to ₹700/sqft ## 6) Painting (Brand-Level Guidance) - Base process: 2-coat JK Putty + 1-coat Primer + 2-coat Emulsion - Essential: Asian Paints Tractor Emulsion (or equivalent) - Premier: Asian Paints Tractor Emulsion Advanced (or equivalent) - Infinia: Asian Paints Tractor Emulsion Shyne (or equivalent)",
+    "- Premier: Asian Paints Tractor Emulsion Advanced (or equivalent) - Infinia: Asian Paints Tractor Emulsion Shyne (or equivalent) - Pinnacle: Asian Paints Royale Emulsion (or equivalent) - Base process: 1-coat Primer + 2-coat Exterior Emulsion - Essential: Asian Paints Ace Emulsion (or equivalent) - Premier: Asian Paints Ace Shyne Emulsion (or equivalent) - Infinia: Asian Paints Apex Emulsion (or equivalent) - Pinnacle: Asian Paints Apex Ultima Emulsion (or equivalent)",
+    "- Infinia: Asian Paints Apex Emulsion (or equivalent) - Pinnacle: Asian Paints Apex Ultima Emulsion (or equivalent) ## 7) Flooring (Indicative Wallets; laying charges vary) - Essential: tiles up to ₹50/sqft - Premier: tiles/granite up to ₹100/sqft - Infinia: tiles/granite/marble up to ₹140/sqft - Pinnacle: tiles/granite/marble up to ₹170/sqft - Essential: tiles up to ₹50/sqft - Premier: tiles/granite up to ₹80/sqft - Infinia: tiles up to ₹110/sqft - Pinnacle: tiles up to ₹140/sqft",
+    "- Infinia: tiles up to ₹110/sqft - Pinnacle: tiles up to ₹140/sqft ## 8) FAQ Notes for the AI Assistant - “Wallet” amounts are spending caps for certain categories; upgrades can be customized at additional cost. - Exact brands can vary by “or equivalent” wording; the assistant should quote the allowance + equivalence language when answering.",
+    "# INDECIMAL — Customer Protection Policies, Quality System, and Guarantees (Internal Reference) Audience: Support, Ops, Project Management, AI Assistant Knowledge Base ## 1) Payment Safety & Stage Controls ### Escrow-Based Payment Model (Concept) - Customer payments are made to an escrow account. - A project manager verifies stage completion. - Funds are disbursed to the construction partner after verification. Purpose: reduce financial risk for customers and improve transparency and trust.",
+    "- Funds are disbursed to the construction partner after verification. Purpose: reduce financial risk for customers and improve transparency and trust. ## 2) Delay Management & Accountability ### Zero-Tolerance Policy on Construction Delays (Operational Mechanisms) Indecimal positions a system-driven approach to on-time delivery using: - Integrated project management system - Instant flagging of deviations - Penalisation to reinforce accountability ## 3) Quality Assurance System",
+    "- Penalisation to reinforce accountability ## 3) Quality Assurance System - The quality system covers 445+ checkpoints across the construction lifecycle. - Each construction phase is scored and audited for: - Progress and quality metrics are described as accessible via a customer dashboard for visibility. ## 4) Maintenance Program (Post-Construction Support) ### Zero Cost Maintenance Program (Coverage Themes)",
+    "## 4) Maintenance Program (Post-Construction Support) ### Zero Cost Maintenance Program (Coverage Themes) The brochure describes a “zero cost maintenance” program intended to keep the home in good condition post-handover. Examples of coverage areas mentioned: - Wardrobe, masonry, modular kitchen - CP fittings, crack filling, tile support - External window & door maintenance Note: Coverage details and terms may vary; treat as “program scope overview” unless a customer-specific contract states otherwise.",
+    "- External window & door maintenance Note: Coverage details and terms may vary; treat as “program scope overview” unless a customer-specific contract states otherwise. ## 5) Financing Support (Customer Experience Positioning) Indecimal positions assistance with home financing including: - Dedicated relationship manager - Minimal documentation (as positioned) - Confirmation within ~7 days* and disbursal in ~30 days* (T&C / eligibility dependent) ## 6) Dedicated Team & Partner Onboarding",
+    "- Confirmation within ~7 days* and disbursal in ~30 days* (T&C / eligibility dependent) ## 6) Dedicated Team & Partner Onboarding ### Dedicated Team Touchpoints (As Shown in Brochure) Roles shown across the journey include: - Relationship manager & architect - Project manager & site engineer ### Partner Onboarding (Quality Gatekeeping) A multi-stage process is described: 1) Ongoing and completed project verification of partner 2) Background and financial verification",
+    "1) Ongoing and completed project verification of partner 2) Background and financial verification 3) Agreement signing between Indecimal & partner for SOP 4) Onboarding across Bangalore for build quality ## 7) Website-Level Customer Assurance Statements (High-Level) The public website also highlights: - 100% transparent pricing & process - Real-time project tracking dashboard - Fixed timelines with penalties for delays - Branded materials and on-site checks - Long-term maintenance and care plans",
+    "- Branded materials and on-site checks - Long-term maintenance and care plans - Structural warranty positioning"
+  ],
+  "metadata": [
+    {
+      "source": "doc1.md",
+      "chunk_id": 0,
+      "text": "# INDECIMAL — Company Overview & Customer Journey (Internal Reference) Audience: Support, Sales, Product, and AI Assistant Knowledge Base Indecimal provides end-to-end home construction support with transparent pricing, quality assurance, and structured project tracking from inquiry to handover. ## 2) What Indecimal Promises (Customer-Facing Commitments) - Indecimal positions its offering as building “confidence” through commitment, not just contracts.",
+      "char_length": 456,
+      "sentences": 5
+    },
+    {
+      "source": "doc1.md",
+      "chunk_id": 1,
+      "text": "## 2) What Indecimal Promises (Customer-Facing Commitments) - Indecimal positions its offering as building “confidence” through commitment, not just contracts. - The approach emphasizes clarity and trust across the construction and ownership journey. ## 3) What We Strive For (Operating Principles) Smooth Construction Experience - Step-by-step support throughout the project. - Fair pricing with no hidden charges. Quality Assurance (445+ checks) - Strict quality control at every construction stage.",
+      "char_length": 501,
+      "sentences": 9
+    },
+    {
+      "source": "doc1.md",
+      "chunk_id": 2,
+      "text": "Quality Assurance (445+ checks) - Strict quality control at every construction stage. Stage-Based Contractor Payments - Payments released only after verified completion. - Clear agreements and real-time online project monitoring. ## 4) Differentiators Highlighted on the Website Indecimal highlights the following as key differentiators versus typical market alternatives: - Warranty & post-delivery support: long-term warranty/maintenance commitments. - Transparency: 100% transparent pricing and process.",
+      "char_length": 506,
+      "sentences": 9
+    },
+    {
+      "source": "doc1.md",
+      "chunk_id": 3,
+      "text": "- Warranty & post-delivery support: long-term warranty/maintenance commitments. - Transparency: 100% transparent pricing and process. - Timelines: fixed project timelines, with penalties for delays. - Quality assurance: branded materials and on-site quality checks. - Updates: real-time project tracking dashboard and visibility. ## 5) Customer Journey (“How We Work”) The publicly described journey is structured in stages so customers know what happens next:",
+      "char_length": 460,
+      "sentences": 7
+    },
+    {
+      "source": "doc1.md",
+      "chunk_id": 4,
+      "text": "## 5) Customer Journey (“How We Work”) The publicly described journey is structured in stages so customers know what happens next: - Customer shares plot details and vision; team connects to start. - Consultation with architects and construction specialists. - Guidance through steps from documentation to disbursal (where applicable). - Collaborative architectural design tailored to the family’s needs. - Detailed design + cost plans with transparent pricing.",
+      "char_length": 461,
+      "sentences": 7
+    },
+    {
+      "source": "doc1.md",
+      "chunk_id": 5,
+      "text": "- Collaborative architectural design tailored to the family’s needs. - Detailed design + cost plans with transparent pricing. - Customer confirms the project with milestone-based payments and clear timelines. 7) Real-time construction progress - Stage-by-stage tracking with live photo updates through the app/dashboard. - Optional interiors journey: concept-to-completion customization. - Handover with maintenance and structural warranty positioning.",
+      "char_length": 452,
+      "sentences": 7
+    },
+    {
+      "source": "doc1.md",
+      "chunk_id": 6,
+      "text": "- Optional interiors journey: concept-to-completion customization. - Handover with maintenance and structural warranty positioning. - Post-handover maintenance support as part of Indecimal’s long-term care positioning. ## 6) FAQs (for the AI Assistant) Q: Do you provide real-time progress visibility? A: Indecimal’s public flow mentions real-time construction progress tracking with live photo updates through their app/dashboard. Q: How does Indecimal reduce hidden surprises in pricing?",
+      "char_length": 489,
+      "sentences": 7
+    },
+    {
+      "source": "doc1.md",
+      "chunk_id": 7,
+      "text": "A: Indecimal’s public flow mentions real-time construction progress tracking with live photo updates through their app/dashboard. Q: How does Indecimal reduce hidden surprises in pricing? A: The flow emphasizes receiving plans that include detailed design and cost plans with transparent pricing and “no hidden surprises.” Q: What makes contractor payments “stage-based”? A: The “Why Us” section states payments are released only after verified completion.",
+      "char_length": 456,
+      "sentences": 5
+    },
+    {
+      "source": "doc2.md",
+      "chunk_id": 0,
+      "text": "# INDECIMAL — Package Comparison & Specification Wallets (Internal Reference) Audience: Sales, Estimation, AI Assistant Knowledge Base ## 1) Package Pricing (Indicative / Per Sqft) These are shown as per-sqft package rates (inclusive of GST) on the public comparison page: - Essential: ₹1,851 /sqft (incl. - Premier (Most Popular): ₹1,995 /sqft (incl. - Infinia: ₹2,250 /sqft (incl. - Pinnacle: ₹2,450 /sqft (incl. ## 2) Structure Specifications (Highlights)",
+      "char_length": 458,
+      "sentences": 9
+    },
+    {
+      "source": "doc2.md",
+      "chunk_id": 1,
+      "text": "- Pinnacle: ₹2,450 /sqft (incl. ## 2) Structure Specifications (Highlights) - Essential: Sunvik, Kamadhenu, or equivalent up to ₹68,000/MT - Premier: JSW or Jindal Neo up to ₹74,000/MT - Infinia: JSW or Jindal Panther up to ₹75,000/MT - Pinnacle: TATA or equivalent up to ₹80,000/MT ### Cement (43 grade surface & 53 grade core) - Essential: Dalmia, Bharthi, or equivalent up to ₹370/bag - Premier: Dalmia, Bharthi, or equivalent up to ₹370/bag - Infinia: Birla Super, Ramco, or equivalent up to ₹390/bag",
+      "char_length": 504,
+      "sentences": 10
+    },
+    {
+      "source": "doc2.md",
+      "chunk_id": 2,
+      "text": "- Premier: Dalmia, Bharthi, or equivalent up to ₹370/bag - Infinia: Birla Super, Ramco, or equivalent up to ₹390/bag - Pinnacle: ACC, Ultratech, Ramco, or equivalent up to ₹400/bag - 20mm & 40mm aggregates across all packages. - Solid concrete blocks 6\" (external) & 4\" (internal) - 6\": up to ₹40 (+/- ₹3) per block - 4\": up to ₹33 (+/- ₹3) per block - M20 or M25 (RCC design mix as advised by the structural engineer) - Floor-to-floor height: 10 ft (across packages) ## 3) Kitchen (Wallet Allowances)",
+      "char_length": 501,
+      "sentences": 10
+    },
+    {
+      "source": "doc2.md",
+      "chunk_id": 3,
+      "text": "- Floor-to-floor height: 10 ft (across packages) ## 3) Kitchen (Wallet Allowances) Note: The page states fittings can be customized at cost. ### Sink (Futura or equivalent) - Essential: up to ₹4,000 (single bowl) - Premier: up to ₹7,000 (single bowl) - Infinia: up to ₹9,000 (single bowl with drain board) - Pinnacle: up to ₹10,000 (single bowl with drain board) - Essential: Parryware/Hindware or equivalent up to ₹2,000 - Premier: Parryware/Hindware or equivalent up to ₹2,500",
+      "char_length": 478,
+      "sentences": 10
+    },
+    {
+      "source": "doc2.md",
+      "chunk_id": 4,
+      "text": "- Essential: Parryware/Hindware or equivalent up to ₹2,000 - Premier: Parryware/Hindware or equivalent up to ₹2,500 - Infinia: Jaquar/Essco or equivalent up to ₹3,500 - Pinnacle: Jaquar/Essco or equivalent up to ₹4,000 ## 4) Bathroom (Wallet Allowances) Note: The page states fittings can be customized at cost. ### Sanitary & CP Fittings (per 1000 sqft) - Essential: up to ₹32,000 (Cera, Hindware / equivalent) - Premier: up to ₹50,000 (Parryware / equivalent)",
+      "char_length": 461,
+      "sentences": 9
+    },
+    {
+      "source": "doc2.md",
+      "chunk_id": 5,
+      "text": "- Essential: up to ₹32,000 (Cera, Hindware / equivalent) - Premier: up to ₹50,000 (Parryware / equivalent) - Infinia: up to ₹70,000 (Jaquar / Essco / equivalent) - Pinnacle: up to ₹80,000 (Kohler / equivalent) - Essential: APL Apollo / Ashirwad / equivalent - Premier: APL Apollo / Ashirwad / equivalent - Infinia: APL Apollo / Ashirwad / Supreme / Astral or equivalent - Pinnacle: APL Apollo / Ashirwad / Supreme / Astral or equivalent ## 5) Doors & Windows (Highlights)",
+      "char_length": 471,
+      "sentences": 9
+    },
+    {
+      "source": "doc2.md",
+      "chunk_id": 6,
+      "text": "- Pinnacle: APL Apollo / Ashirwad / Supreme / Astral or equivalent ## 5) Doors & Windows (Highlights) ### Main Door (Wallet Amount; includes fittings & labour) - Essential: Panelled door; wallet up to ₹20,000 - Premier: Teak door; wallet up to ₹30,000 - Infinia: Teak door; wallet up to ₹40,000 - Pinnacle: Teak door; wallet up to ₹50,000 ### Windows (3-track with mosquito mesh) — Wallet per sqft - Essential: Aluminium/UPVC up to ₹440/sqft - Premier: UPVC up to ₹500/sqft (Lesso eiti or equivalent)",
+      "char_length": 500,
+      "sentences": 10
+    },
+    {
+      "source": "doc2.md",
+      "chunk_id": 7,
+      "text": "- Essential: Aluminium/UPVC up to ₹440/sqft - Premier: UPVC up to ₹500/sqft (Lesso eiti or equivalent) - Infinia: UPVC up to ₹600/sqft - Pinnacle: UPVC up to ₹700/sqft ## 6) Painting (Brand-Level Guidance) - Base process: 2-coat JK Putty + 1-coat Primer + 2-coat Emulsion - Essential: Asian Paints Tractor Emulsion (or equivalent) - Premier: Asian Paints Tractor Emulsion Advanced (or equivalent) - Infinia: Asian Paints Tractor Emulsion Shyne (or equivalent)",
+      "char_length": 459,
+      "sentences": 9
+    },
+    {
+      "source": "doc2.md",
+      "chunk_id": 8,
+      "text": "- Premier: Asian Paints Tractor Emulsion Advanced (or equivalent) - Infinia: Asian Paints Tractor Emulsion Shyne (or equivalent) - Pinnacle: Asian Paints Royale Emulsion (or equivalent) - Base process: 1-coat Primer + 2-coat Exterior Emulsion - Essential: Asian Paints Ace Emulsion (or equivalent) - Premier: Asian Paints Ace Shyne Emulsion (or equivalent) - Infinia: Asian Paints Apex Emulsion (or equivalent) - Pinnacle: Asian Paints Apex Ultima Emulsion (or equivalent)",
+      "char_length": 472,
+      "sentences": 8
+    },
+    {
+      "source": "doc2.md",
+      "chunk_id": 9,
+      "text": "- Infinia: Asian Paints Apex Emulsion (or equivalent) - Pinnacle: Asian Paints Apex Ultima Emulsion (or equivalent) ## 7) Flooring (Indicative Wallets; laying charges vary) - Essential: tiles up to ₹50/sqft - Premier: tiles/granite up to ₹100/sqft - Infinia: tiles/granite/marble up to ₹140/sqft - Pinnacle: tiles/granite/marble up to ₹170/sqft - Essential: tiles up to ₹50/sqft - Premier: tiles/granite up to ₹80/sqft - Infinia: tiles up to ₹110/sqft - Pinnacle: tiles up to ₹140/sqft",
+      "char_length": 485,
+      "sentences": 11
+    },
+    {
+      "source": "doc2.md",
+      "chunk_id": 10,
+      "text": "- Infinia: tiles up to ₹110/sqft - Pinnacle: tiles up to ₹140/sqft ## 8) FAQ Notes for the AI Assistant - “Wallet” amounts are spending caps for certain categories; upgrades can be customized at additional cost. - Exact brands can vary by “or equivalent” wording; the assistant should quote the allowance + equivalence language when answering.",
+      "char_length": 343,
+      "sentences": 5
+    },
+    {
+      "source": "doc3.md",
+      "chunk_id": 0,
+      "text": "# INDECIMAL — Customer Protection Policies, Quality System, and Guarantees (Internal Reference) Audience: Support, Ops, Project Management, AI Assistant Knowledge Base ## 1) Payment Safety & Stage Controls ### Escrow-Based Payment Model (Concept) - Customer payments are made to an escrow account. - A project manager verifies stage completion. - Funds are disbursed to the construction partner after verification. Purpose: reduce financial risk for customers and improve transparency and trust.",
+      "char_length": 495,
+      "sentences": 8
+    },
+    {
+      "source": "doc3.md",
+      "chunk_id": 1,
+      "text": "- Funds are disbursed to the construction partner after verification. Purpose: reduce financial risk for customers and improve transparency and trust. ## 2) Delay Management & Accountability ### Zero-Tolerance Policy on Construction Delays (Operational Mechanisms) Indecimal positions a system-driven approach to on-time delivery using: - Integrated project management system - Instant flagging of deviations - Penalisation to reinforce accountability ## 3) Quality Assurance System",
+      "char_length": 482,
+      "sentences": 9
+    },
+    {
+      "source": "doc3.md",
+      "chunk_id": 2,
+      "text": "- Penalisation to reinforce accountability ## 3) Quality Assurance System - The quality system covers 445+ checkpoints across the construction lifecycle. - Each construction phase is scored and audited for: - Progress and quality metrics are described as accessible via a customer dashboard for visibility. ## 4) Maintenance Program (Post-Construction Support) ### Zero Cost Maintenance Program (Coverage Themes)",
+      "char_length": 412,
+      "sentences": 7
+    },
+    {
+      "source": "doc3.md",
+      "chunk_id": 3,
+      "text": "## 4) Maintenance Program (Post-Construction Support) ### Zero Cost Maintenance Program (Coverage Themes) The brochure describes a “zero cost maintenance” program intended to keep the home in good condition post-handover. Examples of coverage areas mentioned: - Wardrobe, masonry, modular kitchen - CP fittings, crack filling, tile support - External window & door maintenance Note: Coverage details and terms may vary; treat as “program scope overview” unless a customer-specific contract states otherwise.",
+      "char_length": 507,
+      "sentences": 8
+    },
+    {
+      "source": "doc3.md",
+      "chunk_id": 4,
+      "text": "- External window & door maintenance Note: Coverage details and terms may vary; treat as “program scope overview” unless a customer-specific contract states otherwise. ## 5) Financing Support (Customer Experience Positioning) Indecimal positions assistance with home financing including: - Dedicated relationship manager - Minimal documentation (as positioned) - Confirmation within ~7 days* and disbursal in ~30 days* (T&C / eligibility dependent) ## 6) Dedicated Team & Partner Onboarding",
+      "char_length": 490,
+      "sentences": 8
+    },
+    {
+      "source": "doc3.md",
+      "chunk_id": 5,
+      "text": "- Confirmation within ~7 days* and disbursal in ~30 days* (T&C / eligibility dependent) ## 6) Dedicated Team & Partner Onboarding ### Dedicated Team Touchpoints (As Shown in Brochure) Roles shown across the journey include: - Relationship manager & architect - Project manager & site engineer ### Partner Onboarding (Quality Gatekeeping) A multi-stage process is described: 1) Ongoing and completed project verification of partner 2) Background and financial verification",
+      "char_length": 471,
+      "sentences": 10
+    },
+    {
+      "source": "doc3.md",
+      "chunk_id": 6,
+      "text": "1) Ongoing and completed project verification of partner 2) Background and financial verification 3) Agreement signing between Indecimal & partner for SOP 4) Onboarding across Bangalore for build quality ## 7) Website-Level Customer Assurance Statements (High-Level) The public website also highlights: - 100% transparent pricing & process - Real-time project tracking dashboard - Fixed timelines with penalties for delays - Branded materials and on-site checks - Long-term maintenance and care plans",
+      "char_length": 500,
+      "sentences": 11
+    },
+    {
+      "source": "doc3.md",
+      "chunk_id": 7,
+      "text": "- Branded materials and on-site checks - Long-term maintenance and care plans - Structural warranty positioning",
+      "char_length": 111,
+      "sentences": 3
+    }
+  ]
+}
