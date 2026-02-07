@@ -1,81 +1,68 @@
-"""
-Vector Store for Mini RAG Project
-FAISS-based vector store using cosine similarity
-"""
-
 import faiss
 import numpy as np
 import json
-from typing import List, Dict
-
+import os
 
 class VectorStore:
-    def __init__(self, embedding_dim: int):
-        self.embedding_dim = embedding_dim
-        self.index = None
-        self.texts: List[str] = []
-        self.metadata: List[Dict] = []
+    def __init__(self, dimension=384, index_path="index/assignment"):
+        self.dimension = dimension
+        self.index_path = index_path
+        # IndexFlatIP calculates inner product, which equals cosine similarity for normalized vectors
+        self.index = faiss.IndexFlatIP(dimension)
+        self.metadata = []
 
-    def build(self, embeddings: np.ndarray, texts: List[str], metadata: List[Dict]):
-        print("\n🏗️ Building FAISS index (cosine similarity)")
+    def add(self, embeddings, metadata_list):
+        if len(metadata_list) != len(embeddings):
+            raise ValueError("Number of embeddings must match number of metadata entries.")
+        
+        # Ensure float32 for FAISS
+        embeddings_np = np.array(embeddings).astype('float32')
+        
+        # Defensive normalization (optional but robust)
+        faiss.normalize_L2(embeddings_np)
+        
+        self.index.add(embeddings_np)
+        self.metadata.extend(metadata_list)
 
-        # Normalize embeddings for cosine similarity
-        faiss.normalize_L2(embeddings)
-
-        self.index = faiss.IndexFlatIP(self.embedding_dim)
-        self.index.add(embeddings.astype("float32"))
-
-        self.texts = texts
-        self.metadata = metadata
-
-        print(f"   Indexed vectors: {self.index.ntotal}")
-
-    def search(self, query_embedding: np.ndarray, top_k: int = 3, min_similarity: float = 0.3):
-        if self.index is None:
-            raise RuntimeError("Vector index not loaded")
-
-        query_embedding = query_embedding.reshape(1, -1).astype("float32")
-        faiss.normalize_L2(query_embedding)
-
-        sims, idxs = self.index.search(query_embedding, top_k)
-
+    def search(self, query_vector, k=3):
+        # Ensure query is 2D array (1, dimension) and float32
+        query_vector = np.array(query_vector).astype('float32').reshape(1, -1)
+        
+        # Defensive normalization to match the index
+        faiss.normalize_L2(query_vector)
+        
+        distances, indices = self.index.search(query_vector, k)
+        
         results = []
-        for sim, idx in zip(sims[0], idxs[0]):
-            if idx == -1 or sim < min_similarity:
-                continue
-
-            results.append({
-                "text": self.texts[idx],
-                "metadata": self.metadata[idx],
-                "similarity": float(sim)
-            })
-
+        for i, idx in enumerate(indices[0]):
+            if idx != -1: # FAISS returns -1 if no match
+                results.append({
+                    "text": self.metadata[idx]["text"],
+                    "source": self.metadata[idx]["source"],
+                    "score": float(distances[0][i])
+                })
         return results
 
-    def save(self, index_path: str, meta_path: str):
-        faiss.write_index(self.index, index_path)
+    def save(self):
+        if not os.path.exists(self.index_path):
+            os.makedirs(self.index_path)
+            
+        faiss.write_index(self.index, os.path.join(self.index_path, "vector_store.index"))
+        
+        # Save readable JSON metadata (indent=4 is great for debugging)
+        with open(os.path.join(self.index_path, "vector_store.json"), "w", encoding="utf-8") as f:
+            json.dump(self.metadata, f, indent=4, ensure_ascii=False)
+        print(f"Index saved to {self.index_path}")
 
-        with open(meta_path, "w", encoding="utf-8") as f:
-            json.dump(
-                {
-                    "embedding_dim": self.embedding_dim,
-                    "texts": self.texts,
-                    "metadata": self.metadata
-                },
-                f,
-                indent=2,
-                ensure_ascii=False
-            )
+    def load(self):
+        index_file = os.path.join(self.index_path, "vector_store.index")
+        metadata_file = os.path.join(self.index_path, "vector_store.json")
+        
+        if not os.path.exists(index_file) or not os.path.exists(metadata_file):
+            print(" No existing index found.")
+            return
 
-        print(f"💾 Vector store saved to {index_path}")
-
-    def load(self, index_path: str, meta_path: str):
-        self.index = faiss.read_index(index_path)
-
-        with open(meta_path, "r", encoding="utf-8") as f:
-            data = json.load(f)
-            self.embedding_dim = data["embedding_dim"]
-            self.texts = data["texts"]
-            self.metadata = data["metadata"]
-
-        print(f"📂 Vector store loaded from {index_path}")
+        self.index = faiss.read_index(index_file)
+        with open(metadata_file, "r", encoding="utf-8") as f:
+            self.metadata = json.load(f)
+        print(f" Index loaded with {self.index.ntotal} documents.")

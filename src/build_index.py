@@ -1,71 +1,117 @@
-"""
-Build Vector Index for Mini RAG Project
-Stable version with guaranteed paths
-"""
-
-import sys
-from pathlib import Path
-
-# Ensure src is on Python path
-sys.path.append(str(Path(__file__).parent))
-
-from document_processor import DocumentProcessor
-from chunker import DocumentChunker
-from embeddings import EmbeddingGenerator
+import os
+import glob
+from embedder import Embedder
 from vector_store import VectorStore
 
+# Configuration
+CHUNK_SIZE = 600       # Approx 100-150 words, good for MiniLM context limit
+CHUNK_OVERLAP = 150    # ~25% overlap to maintain context across boundaries
 
-def main(index_mode: str = "assignment"):
-    print("=" * 60)
-    print(f"🚀 BUILDING VECTOR INDEX | MODE: {index_mode.upper()}")
-    print("=" * 60)
+def load_documents_from_folder(folder_path):
+    # Sort files for deterministic indexing order
+    file_paths = sorted(glob.glob(os.path.join(folder_path, "*.md")))
+    documents = []
+    
+    if not file_paths:
+        print(f" No Markdown files found in {folder_path}!")
+        return []
 
-    # Base index directory
-    base_index_dir = Path("index") / index_mode
-    base_index_dir.mkdir(parents=True, exist_ok=True)
+    for path in file_paths:
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                content = f.read()
+                if not content.strip():
+                    print(f" Skipping empty file: {path}")
+                    continue
+                documents.append({"source": os.path.basename(path), "text": content})
+        except Exception as e:
+            print(f" Error reading {path}: {e}")
+            
+    return documents
 
-    index_path = base_index_dir / "vector_store.index"
-    meta_path = base_index_dir / "vector_store.json"
+def advanced_chunking(text, source_name):
+    """
+    Splits text while tracking Markdown Headers (#, ##).
+    Prepends context (e.g., "Section: Pricing > Premier") to every chunk.
+    """
+    if not text:
+        return []
+        
+    lines = text.split('\n')
+    chunks = []
+    
+    current_context = "General"
+    current_chunk = []
+    current_length = 0
+    
+    for line in lines:
+        line = line.strip()
+        if not line: continue
+        
+        # 1. Update Context based on Headers
+        if line.startswith("# "):
+            current_context = line.replace("# ", "").strip()
+        elif line.startswith("## "):
+            main_topic = current_context.split(" > ")[0] # Keep top level
+            current_context = f"{main_topic} > {line.replace('## ', '').strip()}"
+            
+        # 2. Check size limit
+        if current_length + len(line) > CHUNK_SIZE:
+            chunk_text = " ".join(current_chunk)
+            
+            # Context Injection (The "Secret Sauce")
+            enriched_text = f"[{source_name} | Section: {current_context}]\n{chunk_text}"
+            chunks.append(enriched_text)
+            
+            # 3. Create Overlap (Keep last ~3 lines)
+            current_chunk = current_chunk[-3:] 
+            current_length = sum(len(l) for l in current_chunk)
+            
+        current_chunk.append(line)
+        current_length += len(line)
 
-    # 1. Load documents
-    print("\n📄 Step 1: Loading documents...")
-    processor = DocumentProcessor(data_dir="data")
-    documents = processor.process_all_documents()
+    # Add the final remaining chunk
+    if current_chunk:
+        chunk_text = " ".join(current_chunk)
+        enriched_text = f"[{source_name} | Section: {current_context}]\n{chunk_text}"
+        chunks.append(enriched_text)
+        
+    return chunks
 
-    if not documents:
-        print("❌ No documents found. Exiting.")
+def run_indexing_pipeline(input_docs, output_path):
+    """
+    Reusable function to index ANY list of documents.
+    """
+    print(f" Indexing {len(input_docs)} documents to {output_path}...")
+    
+    embedder = Embedder()
+    vector_store = VectorStore(index_path=output_path)
+    
+    all_chunks = []
+    all_metadata = []
+
+    for doc in input_docs:
+        chunks = advanced_chunking(doc['text'], doc['source'])
+        for chunk in chunks:
+            all_chunks.append(chunk)
+            all_metadata.append({
+                "source": doc['source'],
+                "text": chunk
+            })
+
+    if not all_chunks:
+        print(" No valid chunks to index.")
         return
 
-    # 2. Chunk documents
-    print("\n✂️ Step 2: Chunking documents...")
-    chunker = DocumentChunker(max_chars=500, overlap_sentences=2)
-    chunks = chunker.chunk_documents(documents)
+    print(f" Embedding {len(all_chunks)} chunks...")
+    embeddings = embedder.embed(all_chunks)
 
-    if not chunks:
-        print("❌ No chunks created. Exiting.")
-        return
-
-    # 3. Generate embeddings
-    print("\n🔢 Step 3: Generating embeddings...")
-    embedder = EmbeddingGenerator()
-    embeddings, texts, metadata = embedder.embed_chunks(chunks)
-
-    # 4. Build vector store
-    print("\n📦 Step 4: Building vector store...")
-    vector_store = VectorStore(embedding_dim=embedder.embedding_dim)
-    vector_store.build(embeddings, texts, metadata)
-
-    # 5. Save index
-    print("\n💾 Step 5: Saving index to disk...")
-    vector_store.save(
-        index_path=str(index_path),
-        meta_path=str(meta_path)
-    )
-
-    print("\n✅ INDEX BUILD COMPLETE")
-    print(f"📁 Saved to: {base_index_dir.resolve()}")
-    print("=" * 60)
-
+    vector_store.add(embeddings, all_metadata)
+    vector_store.save()
+    print("Indexing Complete")
 
 if __name__ == "__main__":
-    main(index_mode="assignment")
+    # Default Assignment Mode
+    docs = load_documents_from_folder("data")
+    if docs:
+        run_indexing_pipeline(docs, "index/assignment")

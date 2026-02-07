@@ -1,342 +1,336 @@
-"""
-Mini RAG Chatbot - Streamlit Interface
-A beautiful, professional chatbot for construction marketplace queries
-"""
 import streamlit as st
 import sys
-from pathlib import Path
+import os
+import time
 
-# Add src to path
-sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.abspath(os.path.join(current_dir, '..'))
+src_dir = os.path.join(parent_dir, 'src')
 
-from embeddings import EmbeddingGenerator
-from vector_store import VectorStore
-from rag_pipeline import RAGPipeline
+if src_dir not in sys.path:
+    sys.path.insert(0, src_dir)
 
-# Page configuration
+# Import Backend
+try:
+    from rag_pipeline import RAGPipeline
+    from build_index import run_indexing_pipeline
+except ImportError:
+    st.error("Critical Error: System modules not found. Check 'src' folder.")
+    st.stop()
+
+# Import File Parsers
+try:
+    import pypdf
+    from docx import Document
+except ImportError:
+    st.error("Missing libraries! Please run: pip install pypdf python-docx")
+    st.stop()
+
 st.set_page_config(
-    page_title="Construction Assistant",
-    page_icon="🏗️",
+    page_title="Indecimal AI",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for a clean, professional look - Construction themed
 st.markdown("""
 <style>
-    /* Main container */
-    .main {
-        background-color: #fafafa;
+    html, body, [class*="css"] {
+        font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
     }
+
+    .stApp { background-color: #0E1117; color: #E0E0E0; }
+    section[data-testid="stSidebar"] { background-color: #262730; }
     
-    /* Header styling - Construction orange/slate theme */
-    .header-container {
-        background: linear-gradient(120deg, #2c3e50 0%, #34495e 50%, #e67e22 100%);
-        padding: 2rem;
+    p, .stMarkdown { 
+        font-size: 1.05rem; 
+        line-height: 1.7; 
+        color: #E0E0E0;
+    }
+
+    h1, h2, h3 { color: #FFFFFF !important; font-weight: 700; }
+    
+    .stChatMessage[data-testid="stChatMessageUser"] {
+        background-color: #1E293B; 
+        border: 1px solid #334155; 
         border-radius: 12px;
-        margin-bottom: 2rem;
-        color: white;
-        text-align: center;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
-    
-    .header-title {
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-        letter-spacing: -0.5px;
+
+    .stChatMessage[data-testid="stChatMessageAssistant"] {
+        background-color: #1F1F1F; 
+        border: 1px solid #333; 
+        border-radius: 12px;
     }
-    
-    .header-subtitle {
-        font-size: 1.1rem;
-        opacity: 0.95;
-        font-weight: 300;
-    }
-    
-    /* Chat messages */
-    .user-message {
-        background-color: #2c3e50;
-        color: white;
-        padding: 1rem 1.5rem;
-        border-radius: 18px 18px 4px 18px;
-        margin: 0.5rem 0;
-        max-width: 75%;
-        margin-left: auto;
-        box-shadow: 0 2px 4px rgba(44, 62, 80, 0.2);
-        font-size: 0.95rem;
-        line-height: 1.5;
-    }
-    
-    .assistant-message {
-        background-color: white;
-        color: #2c3e50;
-        padding: 1rem 1.5rem;
-        border-radius: 18px 18px 18px 4px;
-        margin: 0.5rem 0;
-        max-width: 75%;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.08);
-        border-left: 4px solid #e67e22;
-        font-size: 0.95rem;
-        line-height: 1.6;
-    }
-    
-    /* Context boxes */
-    .context-box {
-        background-color: #f8f9fa;
-        padding: 1rem;
-        border-radius: 8px;
-        margin: 0.5rem 0;
-        border-left: 3px solid #e67e22;
-        font-size: 0.85rem;
-        line-height: 1.5;
-    }
-    
-    .source-badge {
-        background-color: #e67e22;
-        color: white;
-        padding: 0.25rem 0.7rem;
+
+    .source-box {
+        background-color: #2B2D31;
+        border-left: 4px solid #4CAF50;
+        padding: 12px; 
+        margin-top: 8px; 
         border-radius: 4px;
-        font-size: 0.7rem;
+        font-family: 'Consolas', 'Monaco', monospace; 
+        font-size: 0.9em;
+    }
+
+    .source-header { 
+        display: flex; 
+        justify-content: space-between; 
+        color: #4CAF50; 
+        font-weight: bold; 
+        margin-bottom: 5px; 
+    }
+
+    .source-text { color: #CCCCCC; }
+
+    .info-box {
+        background: #333; 
+        padding: 10px; 
+        border-radius: 5px;
+        font-size: 0.85em; 
+        color: #ccc; 
+        margin-bottom: 10px; 
+        border: 1px solid #444;
+    }
+
+    .github-btn {
+        display: block; 
+        width: 100%; 
+        padding: 10px; 
+        text-align: center;
+        background: #24292e; 
+        color: white !important; 
+        border-radius: 6px; 
+        text-decoration: none; 
+        border: 1px solid #444; 
         font-weight: 600;
-        margin-right: 0.5rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+        margin-top: 15px;
     }
-    
-    /* Sidebar */
-    .sidebar .sidebar-content {
-        background-color: #f8f9fa;
-    }
-    
-    /* Buttons */
-    .stButton>button {
-        background-color: #e67e22;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        padding: 0.6rem 1.5rem;
-        font-weight: 600;
-        transition: all 0.2s;
-        text-transform: uppercase;
-        font-size: 0.85rem;
-        letter-spacing: 0.5px;
-    }
-    
-    .stButton>button:hover {
-        background-color: #d35400;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 8px rgba(230, 126, 34, 0.3);
-    }
-    
-    /* Hide Streamlit branding */
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    
-    /* Input box */
-    .stTextInput>div>div>input {
-        border-radius: 24px;
-        border: 2px solid #dee2e6;
-        padding: 0.8rem 1.2rem;
-        font-size: 0.95rem;
-    }
-    
-    .stTextInput>div>div>input:focus {
-        border-color: #e67e22;
-        box-shadow: 0 0 0 0.2rem rgba(230, 126, 34, 0.15);
-    }
-    
-    /* Success/Info boxes */
-    .stSuccess {
-        background-color: #d4edda;
-        border-left: 4px solid #28a745;
-    }
-    
-    .stInfo {
-        background-color: #e8f4f8;
-        border-left: 4px solid #2c3e50;
-    }
-    
-    /* Expander */
-    .streamlit-expanderHeader {
-        background-color: #f8f9fa;
-        border-radius: 6px;
-        font-weight: 500;
+
+    .github-btn:hover { 
+        background: #333; 
+        border-color: #666; 
     }
 </style>
 """, unsafe_allow_html=True)
+def extract_text_from_file(uploaded_file):
+    file_type = uploaded_file.name.split('.')[-1].lower()
+    text = ""
+    try:
+        if file_type == 'pdf':
+            pdf_reader = pypdf.PdfReader(uploaded_file)
+            for page in pdf_reader.pages:
+                text += page.extract_text() + "\n"
+        elif file_type == 'docx':
+            doc = Document(uploaded_file)
+            for para in doc.paragraphs:
+                text += para.text + "\n"
+        else:
+            text = uploaded_file.read().decode("utf-8")
+        return text.strip()
+    except Exception as e:
+        st.error(f"Error parsing {uploaded_file.name}: {e}")
+        return None
 
-# Initialize session state
-if 'messages' not in st.session_state:
+
+def read_core_file(filename):
+    try:
+        with open(os.path.join("data", filename), "r", encoding="utf-8") as f:
+            return f.read()
+    except:
+        return "Error reading file."
+
+if "rag" not in st.session_state:
+    st.session_state.rag = RAGPipeline(index_path="index/assignment")
+
+if "messages" not in st.session_state:
     st.session_state.messages = []
 
-if 'rag_pipeline' not in st.session_state:
-    st.session_state.rag_pipeline = None
-    st.session_state.initialized = False
+if "current_mode" not in st.session_state:
+    st.session_state.current_mode = "Assignment Mode"
 
-def initialize_rag():
-    """Initialize RAG pipeline (cached)"""
-    if not st.session_state.initialized:
-        with st.spinner("🔧 Initializing AI Assistant... This may take a moment on first load."):
-            try:
-                # Load embedding model
-                embedder = EmbeddingGenerator()
-                
-                # Load vector store
-                vector_store = VectorStore(embedding_dim=embedder.embedding_dim)
-                vector_store.load()
-                
-                # Initialize RAG pipeline
-                rag = RAGPipeline(
-                    vector_store=vector_store,
-                    embedder=embedder,
-                    llm_backend="ollama",
-                    llm_model="llama3.2:3b",
-                    top_k=3,
-                    temperature=0.1
-                )
-                
-                st.session_state.rag_pipeline = rag
-                st.session_state.initialized = True
-                return True
-            except Exception as e:
-                st.error(f"❌ Error initializing system: {str(e)}")
-                st.error("Make sure you've run: `python src/vector_store.py` first!")
-                return False
-    return True
+if "model_provider" not in st.session_state:
+    st.session_state.model_provider = "Local (Ollama)"
 
-def display_message(role, content, context=None):
-    """Display a chat message with styling"""
-    if role == "user":
-        st.markdown(f'<div class="user-message">👤 {content}</div>', unsafe_allow_html=True)
+
+#sidebar
+with st.sidebar:
+
+    st.header(" System Configuration")
+
+    # Data Source
+    st.subheader(" Data Source")
+
+    mode = st.radio(
+        "Select Mode",
+        [" Assignment Mode", "Custom File Mode"],
+        label_visibility="collapsed"
+    )
+
+    # Mode logic
+    if "Assignment" in mode:
+        clean_mode = "Assignment Mode"
     else:
-        st.markdown(f'<div class="assistant-message">🤖 {content}</div>', unsafe_allow_html=True)
-        
-        # Display context if available
-        if context and st.session_state.show_context:
-            with st.expander("📚 View Retrieved Context", expanded=False):
-                for i, ctx in enumerate(context, 1):
-                    similarity_pct = ctx['similarity'] * 100
-                    st.markdown(f"""
-                    <div class="context-box">
-                        <span class="source-badge">{ctx['source']}</span>
-                        <span style="color: #e67e22; font-weight: 600;">Relevance: {similarity_pct:.1f}%</span>
-                        <p style="margin-top: 0.5rem; color: #495057;">{ctx['text'][:300]}...</p>
-                    </div>
-                    """, unsafe_allow_html=True)
+        clean_mode = "Custom File Mode"
 
-def main():
-    # Header
-    st.markdown("""
-    <div class="header-container">
-        <div class="header-title">🏗️ Construction Assistant</div>
-        <div class="header-subtitle">Ask me anything about Indecimal's construction services, quality checks, and policies</div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # Sidebar
-    with st.sidebar:
-        st.markdown("### ⚙️ Settings")
-        
-        st.session_state.show_context = st.checkbox(
-            "Show Retrieved Context",
-            value=True,
-            help="Display the source documents used to generate answers"
-        )
-        
-        st.markdown("---")
-        
-        st.markdown("### 📊 System Info")
-        if st.session_state.initialized:
-            st.success("✅ AI Assistant Ready")
-            st.info("🤖 Model: Llama 3.2 (3B)")
-            st.info("🔍 Retrieval: Top-3 Chunks")
+    if clean_mode != st.session_state.current_mode:
+        st.session_state.current_mode = clean_mode
+        st.session_state.messages = []
+
+        if clean_mode == "Assignment Mode":
+            st.session_state.rag.load_index("index/assignment")
+            st.toast("Loaded Core Documents")
         else:
-            st.warning("⏳ Not initialized")
-        
-        st.markdown("---")
-        
-        st.markdown("### 💡 Example Questions")
-        st.markdown("""
-        - What quality checks do you perform?
-        - How does the payment system work?
-        - What services does Indecimal provide?
-        - Tell me about stage-based payments
-        - What guarantees do you offer?
-        """)
-        
-        st.markdown("---")
-        
-        if st.button("🗑️ Clear Chat History"):
+            if os.path.exists("index/custom/vector_store.index"):
+                st.session_state.rag.load_index("index/custom")
+                st.toast("Loaded Custom Documents")
+            else:
+                st.warning("No custom index found.")
+
+    st.divider()
+
+    # Upload / Core Docs
+    if clean_mode == "Custom File Mode":
+
+        st.subheader(" Upload Documents")
+
+        uploaded_files = st.file_uploader(
+            "Upload files",
+            type=["pdf", "docx", "md", "txt"],
+            accept_multiple_files=True,
+            label_visibility="collapsed"
+        )
+
+        if uploaded_files and st.button("Index Files", type="primary"):
+            with st.spinner("Processing files..."):
+                docs = []
+                for f in uploaded_files:
+                    txt = extract_text_from_file(f)
+                    if txt:
+                        docs.append({"source": f.name, "text": txt})
+
+                if docs:
+                    if not os.path.exists("index/custom"):
+                        os.makedirs("index/custom")
+
+                    run_indexing_pipeline(docs, "index/custom")
+                    st.session_state.rag.load_index("index/custom")
+                    st.success(f"Indexed {len(docs)} files successfully.")
+
+    else:
+
+        st.subheader("📂 Core Documents")
+        st.caption("Click to view content:")
+
+        with st.expander("📄 doc1.md (Overview)"):
+            st.text(read_core_file("doc1.md"))
+
+        with st.expander("📄 doc2.md (Pricing)"):
+            st.text(read_core_file("doc2.md"))
+
+        with st.expander("📄 doc3.md (Policies)"):
+            st.text(read_core_file("doc3.md"))
+
+    st.divider()
+
+    # Model Settings
+    with st.expander(" Model Settings (Advanced)"):
+
+        model_provider = st.selectbox(
+            "🤖 LLM Provider",
+            ["Local (Ollama)", "OpenRouter API"]
+        )
+
+        st.session_state.model_provider = model_provider
+
+        if model_provider == "OpenRouter API":
+            api_key = st.text_input("Enter API Key", type="password")
+            if api_key:
+                os.environ["OPENROUTER_API_KEY"] = api_key
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        if st.button(" Clear Chat", use_container_width=True):
             st.session_state.messages = []
             st.rerun()
-        
-        st.markdown("---")
-        st.markdown("### ℹ️ About")
-        st.markdown("""
-        This AI assistant uses **Retrieval-Augmented Generation (RAG)** 
-        to provide accurate, grounded answers based on Indecimal's 
-        internal documents.
-        
-        **Tech Stack:**
-        - 🔢 Embeddings: all-MiniLM-L6-v2
-        - 🗄️ Vector Store: FAISS
-        - 🤖 LLM: Llama 3.2 (3B)
-        - 🎨 Frontend: Streamlit
-        """)
-    
-    # Initialize RAG
-    if not initialize_rag():
-        st.stop()
-    
-    # Display chat history
-    for message in st.session_state.messages:
-        display_message(
-            message["role"],
-            message["content"],
-            message.get("context")
-        )
-    
-    # Chat input
-    user_input = st.chat_input("Ask me anything about construction services...")
-    
-    if user_input:
-        # Add user message to history
-        st.session_state.messages.append({
-            "role": "user",
-            "content": user_input
-        })
-        
-        # Display user message
-        display_message("user", user_input)
-        
-        # Generate response
-        with st.spinner("🤔 Thinking..."):
-            try:
-                response = st.session_state.rag_pipeline.query(user_input)
-                
-                # Add assistant message to history
-                st.session_state.messages.append({
-                    "role": "assistant",
-                    "content": response['answer'],
-                    "context": response.get('retrieved_context', [])
-                })
-                
-                # Display assistant message
-                display_message(
-                    "assistant",
-                    response['answer'],
-                    response.get('retrieved_context', [])
-                )
-                
-            except Exception as e:
-                error_msg = f"Sorry, I encountered an error: {str(e)}"
-                st.session_state.messages.append({
-                    "role": "assistant",
-                    "content": error_msg
-                })
-                display_message("assistant", error_msg)
-        
-        st.rerun()
 
-if __name__ == "__main__":
-    main()
+    with col2:
+        if st.button("➕ New Chat", use_container_width=True):
+            st.rerun()
+
+    st.markdown("""
+        <a href="https://github.com/architzero/MiniRag-Construction-Assistant" 
+           target="_blank" 
+           class="github-btn">
+            🔗 View GitHub Repository
+        </a>
+    """, unsafe_allow_html=True)
+
+# Main Interface
+st.title("Indecimal AI Assistant")
+st.caption(f" Data Mode: {st.session_state.current_mode}")
+
+# Display Messages
+for msg in st.session_state.messages:
+    with st.chat_message(msg["role"]):
+        st.markdown(msg["content"])
+
+        if msg.get("sources"):
+            with st.expander(" Verified Sources"):
+                for src in msg["sources"]:
+                    st.markdown(f"""
+                    <div class="source-box">
+                        <div class="source-header">
+                            <span>{src['source']}</span>
+                            <span>Score: {src['score']:.2f}</span>
+                        </div>
+                        <div class="source-text">
+                            "{src['text'][:200]}..."
+                        </div>
+                    </div>
+                    """, unsafe_allow_html=True)
+#chat input
+if prompt := st.chat_input("Ask about packages, pricing, or policies..."):
+
+    st.session_state.messages.append({"role": "user", "content": prompt})
+
+    with st.chat_message("user"):
+        st.markdown(prompt)
+
+    with st.chat_message("assistant"):
+        with st.spinner("Analyzing documents..."):
+
+            try:
+                response = st.session_state.rag.run(
+                    prompt,
+                    chat_history=st.session_state.messages,
+                    model_type=st.session_state.model_provider
+                )
+
+                answer = response["answer"]
+                sources = response["sources"]
+
+                st.markdown(answer)
+
+                if sources:
+                    with st.expander("🔍 Verified Sources"):
+                        for src in sources:
+                            st.markdown(f"""
+                            <div class="source-box">
+                                <div class="source-header">
+                                    <span>{src['source']}</span>
+                                    <span>Score: {src['score']:.2f}</span>
+                                </div>
+                                <div class="source-text">
+                                    "{src['text'][:200]}..."
+                                </div>
+                            </div>
+                            """, unsafe_allow_html=True)
+
+                st.session_state.messages.append({
+                    "role": "assistant",
+                    "content": answer,
+                    "sources": sources
+                })
+
+            except Exception as e:
+                st.error(f"Error: {e}")
