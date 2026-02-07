@@ -1,69 +1,48 @@
-### MiniRAG — Grounded Construction Intelligence Assistant
+### MiniRAG - Grounded Construction Intelligence Assistant
 
-A production-style Retrieval-Augmented Generation (RAG) system designed to answer construction marketplace queries using strictly internal documentation, with full source traceability and zero hallucination.
+A production style Retrieval-Augmented Generation (RAG) system designed to answer construction marketplace queries using strictly internal documentation, with full source traceability and zero hallucination.
 
-### 🚀 Overview
+### Overview
 
 MiniRAG is a grounded AI assistant built for a construction marketplace use case.
-It retrieves information from internal policy, pricing, and specification documents and generates answers exclusively from retrieved context.
+It retrieves information from internal policy, pricing and specification documents and generates answers from retrieved context.
 
-The system is built around one guiding principle:
-
-Accuracy over creativity.
-
-❌ No internet knowledge
-
-❌ No hallucinated facts
-
-✅ Full source transparency
-
-✅ Deterministic, evaluable behavior
-
-✨ Key Features
-
-🔎 Semantic Retrieval using FAISS + MiniLM embeddings
-
-🧠 Strict Context-Grounded Answer Generation
-
-📊 Similarity Score Transparency
-
-📁 Header-Aware Intelligent Chunking
-
-🔄 Dual Mode Indexing (Assignment Docs + Custom Uploads)
-
-🤖 Flexible LLM Backend (Local via Ollama or API-based)
-
-🖥️ Streamlit-based Interactive Interface for Easy Evaluation
+#### Key Features
+1. Semantic Retrieval using FAISS + MiniLM embeddings
+2. Strict Context Grounded Answer Generation
+3. Similarity Score Transparency
+4. Header-Aware Intelligent Chunking
+5. Dual Mode Indexing (Assignment Docs + Custom Uploads)
+6. Flexible LLM Backend (Local via Ollama or API-based)
 
 ### System Architecture
 
+```
 User Query
-   ↓
+     ↓
 Query Embedding (MiniLM)
-   ↓
+     ↓
 FAISS Vector Search (Cosine Similarity)
-   ↓
+     ↓
 Top-K Relevant Chunks
-   ↓
+     ↓
 Strict Context Injection
-   ↓
+     ↓
 LLM Generation
-   ↓
+     ↓
 Final Answer + Sources + Similarity Scores
+```
 
-Architectural Philosophy
+#### Architectural Philosophy
 
-The system follows clear separation of concerns:
+Retrieval Layer: Precision & Relevance
+Grounding Layer: Hallucination Control
+Generation Layer: Structured Answering
+Frontend Layer: Transparency & Usability
 
-Retrieval Layer → Precision & relevance
+#### Project Structure
 
-Grounding Layer → Hallucination control
-
-Generation Layer → Structured answering
-
-Frontend Layer → Transparency & usability
-
-### 📂 Project Structure
+```
 .
 ├── frontend/
 │   └── app.py                # Streamlit UI
@@ -86,58 +65,50 @@ Frontend Layer → Transparency & usability
 ├── test_rag.py               # Backend-only evaluation script
 ├── requirements.txt
 └── README.md
+```
 
 ### Technical Deep Dive
- ## 1️⃣ Intelligent Document Chunking
 
+#### Intelligent Document Chunking
 Large language models cannot process entire documents reliably due to context window limits.
 To address this, documents are split into semantic chunks using a context-aware strategy.
 
 Chunking strategy:
 
-Markdown header-aware parsing (#, ##)
-
-Hierarchical section tracking
-
-~600 character chunk size
-
-~25% overlap for semantic continuity
-
-Metadata injected into each chunk
+1. Markdown header-aware parsing (#, ##)
+2. Hierarchical section tracking
+3. ~600 character chunk size
+4. ~25% overlap for semantic continuity
+4. Metadata injected into each chunk
 
 Example chunk format:
 
+```
 [doc2.md | Section: Pricing > Premier]
 Steel: JSW or Jindal Neo up to ₹74,000/MT
-
+```
 
 This ensures that each chunk:
 
-Is meaningful in isolation
+1. Is meaningful in isolation
+2. Retains section identity
+3. Avoids cross-section confusion during retrieval
 
-Retains section identity
+#### Embeddings
 
-Avoids cross-section confusion during retrieval
-
-## 2️⃣ Embeddings
-
+```
 Model: sentence-transformers/all-MiniLM-L6-v2
-
 Vector Dimension: 384
-
 Normalization: L2-normalized
-
 Similarity Metric: Cosine similarity
+```
 
 MiniLM was chosen because it:
+1. Performs well on short semantic text
+2. Runs efficiently on CPU
+3. Is widely accepted for retrieval tasks
 
-Performs well on short semantic text
-
-Runs efficiently on CPU
-
-Is widely accepted for retrieval tasks
-
-## 3️⃣ Vector Search (FAISS)
+#### Vector Search (FAISS)
 
 Uses FAISS IndexFlatIP
 
@@ -147,172 +118,84 @@ Top-K retrieval (default: 5)
 
 Returns:
 
-Chunk text
-
-Source document
-
-Similarity score
+1. Chunk text
+2. Source document
+3. Similarity score
 
 FAISS is used locally to keep the system:
 
-Lightweight
+1. Lightweight
+2. Deterministic
+3. Easy to evaluate
 
-Deterministic
-
-Easy to evaluate
-
-## 4️⃣ Strict Grounding Enforcement
+#### Strict Grounding Enforcement
 
 The core safety mechanism is prompt-level grounding.
 
 System rules enforced during generation:
 
-Use only the provided context
-
-Do not use external or general knowledge
-
-If information is missing, explicitly respond:
-
-“I don’t have enough information to answer that.”
+1. Use only the provided context
+2. Do not use external or general knowledge
+3. If information is missing, explicitly respond:
+   “I don’t have enough information to answer that.”
 
 Additional safeguards:
 
-Context-only prompt injection
-
-No open-ended generation
-
-Source visibility in UI
-
-Similarity score transparency
+1. Context-only prompt injection
+2. No open-ended generation
+3. Source visibility in UI
+4. Similarity score transparency
 
 ### LLM Backend Options
 
 The system supports two execution modes:
 
-## Local (Offline)
+#### Local (Offline)
 
 LLaMA 3.2 (3B) via Ollama
 
-Fully offline inference
+* Fully offline inference
+* Suitable for privacy-sensitive workflows
 
-Suitable for privacy-sensitive workflows
+#### API-Based
 
-## API-Based
+OpenRouter supported models (e.g. Mistral-7B)
 
-OpenRouter-supported models (e.g., Mistral-7B)
-
-No GPU required
-
-Easy experimentation
+* No GPU required
+* Easy experimentation
 
 The backend can be switched from the Streamlit sidebar.
 
-### Frontend (Why it Exists)
+### Frontend
 
-The frontend is built using Streamlit.
+The frontend allows clear visibility of:
 
-Purpose of the frontend:
-
-Easy access for evaluators
-
-No need to run backend scripts manually
-
-Clear visibility of:
-
-Answers
-
-Sources
-
-Similarity scores
-
-Index mode
-
-The frontend is not the focus of the assignment, but a usability layer to make evaluation straightforward.
-
-### Evaluation Strategy
-
-This project is evaluated qualitatively, which is standard for RAG systems.
-
-Evaluation approach:
-
-Build a fixed document index
-
-Ask factual questions
-
-Verify answers against retrieved sources
-
-Confirm correct refusal when information is missing
-
-Example queries tested:
-
-“What cement is used in the Premier package?”
-
-“How does the company ensure quality assurance?”
-
-“What payment safeguards exist for customers?”
-
-Expected behavior:
-
-Accurate retrieval
-
-Grounded answers
-
-No hallucination
-
-Transparent sources
+* Answers
+* Sources
+* Similarity scores
+* Index mode
 
 ### Getting Started
 
-Prerequisites
+* Prerequisites
 
-Python 3.8+
+1. Python 3.8+
+2. Optional: Ollama (for local LLM mode)
 
-Optional: Ollama (for local LLM mode)
-
-1️⃣ Clone Repository
+```
+# Clone Repositiory
 git clone https://github.com/architzero/MiniRag-Construction-Assistant.git
 cd MiniRag-Construction-Assistant
 
-2️⃣ Install Dependencies
+# Install Dependencies
 pip install -r requirements.txt
 
-3️⃣ Build Assignment Index
+# Build Assignment Index
 python src/build_index.py
 
-4️⃣ Run Backend Test (Optional)
+# Run Backend Test (Optional)
 python test_rag.py
 
-5️⃣ Launch Frontend
+# Launch Frontend
 streamlit run frontend/app.py
-
-
-### Design Decisions Summary
-
-FAISS chosen over managed vector DBs for simplicity
-
-MiniLM chosen for CPU-friendly semantic search
-
-Strict grounding enforced to eliminate hallucination
-
-Frontend designed for transparency, not aesthetics
-
-
-### About This Project
-
-This project was built as a technical assignment to demonstrate:
-
-Practical understanding of RAG systems
-
-Semantic retrieval design
-
-Hallucination mitigation
-
-Clean, modular backend engineering
-
-Transparent AI system behavior
-
-As a fresher engineer, the focus was not just to “make it work”, but to design it in a way that reflects production-oriented thinking.
-
-### License
-
-Developed for educational and evaluation purposes.
+```
