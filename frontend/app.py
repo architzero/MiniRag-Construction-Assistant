@@ -1,3 +1,10 @@
+import html
+
+def sanitize_text(text):
+    if not text or not isinstance(text, str):
+        return ""
+    return html.escape(text)
+
 import streamlit as st
 import sys
 import os
@@ -268,7 +275,7 @@ with st.sidebar:
 # Main Interface
 st.title("Indecimal AI Assistant")
 st.caption(f" Data Mode: {st.session_state.current_mode}")
-
+st.caption("Showing full retrieved chunks for transparency.")
 # Display Messages
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
@@ -284,7 +291,7 @@ for msg in st.session_state.messages:
                             <span>Score: {src['score']:.2f}</span>
                         </div>
                         <div class="source-text">
-                            "{src['text'][:200]}..."
+                           "{sanitize_text(src['text'])}"
                         </div>
                     </div>
                     """, unsafe_allow_html=True)
@@ -321,7 +328,7 @@ if prompt := st.chat_input("Ask about packages, pricing, or policies..."):
                                     <span>Score: {src['score']:.2f}</span>
                                 </div>
                                 <div class="source-text">
-                                    "{src['text'][:200]}..."
+                                   "{sanitize_text(src['text'])}"
                                 </div>
                             </div>
                             """, unsafe_allow_html=True)

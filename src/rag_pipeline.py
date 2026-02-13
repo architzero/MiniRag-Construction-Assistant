@@ -1,5 +1,4 @@
 import os
-import ollama
 from openai import OpenAI
 from embedder import Embedder
 from vector_store import VectorStore
@@ -64,6 +63,10 @@ class RAGPipeline:
 
     def _call_ollama(self, system_prompt, query):
         try:
+            import ollama
+        except ImportError:
+            return " Ollama Error: Missing dependency. Install with `pip install ollama`."
+        try:
             response = ollama.chat(
                 model=self.model_name,
                 messages=[
@@ -95,7 +98,7 @@ class RAGPipeline:
             )
             return response.choices[0].message.content
         except Exception as e:
-            return f" OpenRouter Error: {str(e)}"
+            return f"OpenRouter Error: {str(e)}"
 
     def run(self, query, chat_history=None, model_type="Local (Ollama)"):
         if chat_history is None:

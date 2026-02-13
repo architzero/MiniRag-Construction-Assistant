@@ -199,3 +199,13 @@ python test_rag.py
 # Launch Frontend
 streamlit run frontend/app.py
 ```
+## Document provenance checklist (for assignment reviewers)
+
+If you need strict reproducibility against source PDFs:
+
+1. Store original files in `data/raw/`.
+2. Record SHA256 checksums in `data/raw/CHECKSUMS.txt`.
+3. Add a conversion script that generates `data/doc*.md` from raw files.
+4. Rebuild the index with `python src/build_index.py`.
+
+This keeps the RAG pipeline reviewable end-to-end.

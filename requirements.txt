@@ -21,3 +21,5 @@ tiktoken>=0.5.0               # Token counting (useful for chunking)
 
 pypdf
 python-docx
+# Optional local LLM runtime
+ollama>=0.3.0
