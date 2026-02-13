@@ -1,44 +1,43 @@
 ### MiniRAG - Grounded Construction Intelligence Assistant
 
-A production style Retrieval-Augmented Generation (RAG) system designed to answer construction marketplace queries using strictly internal documentation, with full source traceability and zero hallucination.
+A production-ready RAG system that answers construction marketplace queries using only internal documentation. No hallucinations, full source traceability.
+
+🔗 **[Live Demo](https://minirag-construction-assistant-5qjcmvpiyucdiiekunzbfd.streamlit.app/)**
 
 ### Overview
 
-MiniRAG is a grounded AI assistant built for a construction marketplace use case.
-It retrieves information from internal policy, pricing and specification documents and generates answers from retrieved context.
+MiniRAG is a grounded AI assistant built for construction marketplace queries. It pulls information from internal policy, pricing, and spec documents, then generates answers strictly from what it finds.
 
-#### Key Features
-1. Semantic Retrieval using FAISS + MiniLM embeddings
-2. Strict Context Grounded Answer Generation
-3. Similarity Score Transparency
-4. Header-Aware Intelligent Chunking
-5. Dual Mode Indexing (Assignment Docs + Custom Uploads)
-6. Flexible LLM Backend (Local via Ollama or API-based)
+#### What It Does
+1. Semantic search with FAISS + MiniLM embeddings
+2. Context-grounded answer generation (no making stuff up)
+3. Shows similarity scores for transparency
+4. Smart document chunking that respects headers
+5. Two modes: pre-loaded docs or upload your own
+6. Works with Groq API (cloud) or Ollama (local)
 
-### System Architecture
+### How It Works
 
 ```
-User Query
+User asks a question
      ↓
-Query Embedding (MiniLM)
+Convert to embedding (MiniLM)
      ↓
-FAISS Vector Search (Cosine Similarity)
+Search vector database (FAISS)
      ↓
-Top-K Relevant Chunks
+Grab top 5 relevant chunks
      ↓
-Strict Context Injection
+Feed to LLM with strict instructions
      ↓
-LLM Generation
-     ↓
-Final Answer + Sources + Similarity Scores
+Get answer + sources + confidence scores
 ```
 
-#### Architectural Philosophy
+#### Why This Architecture?
 
-Retrieval Layer: Precision & Relevance
-Grounding Layer: Hallucination Control
-Generation Layer: Structured Answering
-Frontend Layer: Transparency & Usability
+- **Retrieval**: Find the right info fast
+- **Grounding**: Stop the AI from making things up
+- **Generation**: Get structured, cited answers
+- **Frontend**: See exactly where answers come from
 
 #### Project Structure
 
@@ -67,145 +66,86 @@ Frontend Layer: Transparency & Usability
 └── README.md
 ```
 
-### Technical Deep Dive
+### Technical Details
 
-#### Intelligent Document Chunking
-Large language models cannot process entire documents reliably due to context window limits.
-To address this, documents are split into semantic chunks using a context-aware strategy.
+#### Document Chunking
+LLMs can't handle entire documents at once, so we break them into smart chunks:
 
-Chunking strategy:
+- Respects markdown headers (#, ##)
+- Tracks section hierarchy
+- ~600 characters per chunk
+- 25% overlap so context doesn't get lost
+- Each chunk knows where it came from
 
-1. Markdown header-aware parsing (#, ##)
-2. Hierarchical section tracking
-3. ~600 character chunk size
-4. ~25% overlap for semantic continuity
-4. Metadata injected into each chunk
-
-Example chunk format:
-
+Example:
 ```
 [doc2.md | Section: Pricing > Premier]
 Steel: JSW or Jindal Neo up to ₹74,000/MT
 ```
 
-This ensures that each chunk:
+This way each chunk makes sense on its own and you can trace it back to the source.
 
-1. Is meaningful in isolation
-2. Retains section identity
-3. Avoids cross-section confusion during retrieval
+#### Embeddings & Search
 
-#### Embeddings
+**Model**: sentence-transformers/all-MiniLM-L6-v2  
+**Why**: Fast, accurate, runs on CPU
 
-```
-Model: sentence-transformers/all-MiniLM-L6-v2
-Vector Dimension: 384
-Normalization: L2-normalized
-Similarity Metric: Cosine similarity
-```
+**Search**: FAISS with cosine similarity  
+**Returns**: Text chunks + source files + confidence scores
 
-MiniLM was chosen because it:
-1. Performs well on short semantic text
-2. Runs efficiently on CPU
-3. Is widely accepted for retrieval tasks
+FAISS keeps everything local and deterministic - no cloud dependencies for the core search.
 
-#### Vector Search (FAISS)
+#### Grounding (Anti-Hallucination)
 
-Uses FAISS IndexFlatIP
+The LLM gets strict instructions:
+- Only use the provided context
+- Don't use general knowledge
+- If info is missing, say "I don't have enough information"
+- Cite sources when possible
 
-Inner Product + normalized vectors = cosine similarity
+Plus the UI shows you the exact chunks used, so you can verify everything.
 
-Top-K retrieval (default: 5)
+### LLM Options
 
-Returns:
+**Groq API** (default for deployment)
+- Fast inference with Llama 3.3 70B
+- No local setup needed
+- Free tier available
 
-1. Chunk text
-2. Source document
-3. Similarity score
+**Ollama** (local option)
+- Runs Llama 3.2 3B on your machine
+- Fully offline
+- Good for privacy-sensitive work
 
-FAISS is used locally to keep the system:
+Switch between them in the sidebar.
 
-1. Lightweight
-2. Deterministic
-3. Easy to evaluate
+### Try It Out
 
-#### Strict Grounding Enforcement
+🚀 **[Live Demo](https://minirag-construction-assistant-5qjcmvpiyucdiiekunzbfd.streamlit.app/)**
 
-The core safety mechanism is prompt-level grounding.
+### Run Locally
 
-System rules enforced during generation:
-
-1. Use only the provided context
-2. Do not use external or general knowledge
-3. If information is missing, explicitly respond:
-   “I don’t have enough information to answer that.”
-
-Additional safeguards:
-
-1. Context-only prompt injection
-2. No open-ended generation
-3. Source visibility in UI
-4. Similarity score transparency
-
-### LLM Backend Options
-
-The system supports two execution modes:
-
-#### Local (Offline)
-
-LLaMA 3.2 (3B) via Ollama
-
-* Fully offline inference
-* Suitable for privacy-sensitive workflows
-
-#### API-Based
-
-OpenRouter supported models (e.g. Mistral-7B)
-
-* No GPU required
-* Easy experimentation
-
-The backend can be switched from the Streamlit sidebar.
-
-### Frontend
-
-The frontend allows clear visibility of:
-
-* Answers
-* Sources
-* Similarity scores
-* Index mode
-
-### Getting Started
-
-* Prerequisites
-
-1. Python 3.8+
-2. Optional: Ollama (for local LLM mode)
-
-```
-# Clone Repositiory
+```bash
+# Clone repo
 git clone https://github.com/architzero/MiniRag-Construction-Assistant.git
 cd MiniRag-Construction-Assistant
 
-# Install Dependencies
+# Install dependencies
 pip install -r requirements.txt
 
-# Build Assignment Index
-python src/build_index.py
-
-# Run Backend Test (Optional)
-python test_rag.py
-
-# Launch Frontend
+# Launch app
 streamlit run frontend/app.py
 ```
-## Document provenance checklist (for assignment reviewers)
+
+The index is already built, so you can start using it right away.
+
+### For Assignment Reviewers
 
 If you need strict reproducibility against source PDFs:
 
-1. Store original files in `data/raw/`.
-2. Record SHA256 checksums in `data/raw/CHECKSUMS.txt`.
-3. Add a conversion script that generates `data/doc*.md` from raw files.
-4. Rebuild the index with `python src/build_index.py`.
+1. Store original files in `data/raw/`
+2. Record SHA256 checksums in `data/raw/CHECKSUMS.txt`
+3. Add a conversion script that generates `data/doc*.md` from raw files
+4. Rebuild the index with `python src/build_index.py`
 
 This keeps the RAG pipeline reviewable end-to-end.
