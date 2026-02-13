@@ -145,7 +145,7 @@ def read_core_file(filename):
     except:
         return "Error reading file."
 
-if "rag" not in st.session_state:
+if "rag" not in st.session_state or "api_key" not in dir(st.session_state.rag.run.__code__.co_varnames):
     st.session_state.rag = RAGPipeline(index_path="index/assignment")
 
 if "messages" not in st.session_state:
@@ -253,10 +253,13 @@ with st.sidebar:
     st.session_state.model_provider = model_provider
 
     if model_provider == "Groq":
-        api_key = st.text_input("Groq API Key", type="password", value=st.session_state.api_key)
-        if api_key:
-            st.session_state.api_key = api_key
-        st.caption("Get your key from [console.groq.com](https://console.groq.com)")
+        if not st.session_state.api_key:
+            api_key = st.text_input("Groq API Key", type="password")
+            if api_key:
+                st.session_state.api_key = api_key
+            st.caption("Get your key from [console.groq.com](https://console.groq.com)")
+        else:
+            st.success("✓ API Key configured")
     else:
         st.caption("Make sure Ollama is running locally")
 
