@@ -154,8 +154,11 @@ if "messages" not in st.session_state:
 if "current_mode" not in st.session_state:
     st.session_state.current_mode = "Assignment Mode"
 
+if "api_key" not in st.session_state:
+    st.session_state.api_key = st.secrets.get("GROQ_API_KEY", "")
+
 if "model_provider" not in st.session_state:
-    st.session_state.model_provider = "Local (Ollama)"
+    st.session_state.model_provider = "Groq"
 
 
 #sidebar
@@ -239,19 +242,23 @@ with st.sidebar:
     st.divider()
 
     # Model Settings
-    with st.expander(" Model Settings (Advanced)"):
+    st.subheader("🤖 AI Model")
 
-        model_provider = st.selectbox(
-            "🤖 LLM Provider",
-            ["Local (Ollama)", "OpenRouter API"]
-        )
+    model_provider = st.radio(
+        "Choose LLM",
+        ["Groq", "Ollama"],
+        label_visibility="collapsed"
+    )
 
-        st.session_state.model_provider = model_provider
+    st.session_state.model_provider = model_provider
 
-        if model_provider == "OpenRouter API":
-            api_key = st.text_input("Enter API Key", type="password")
-            if api_key:
-                os.environ["OPENROUTER_API_KEY"] = api_key
+    if model_provider == "Groq":
+        api_key = st.text_input("Groq API Key", type="password", value=st.session_state.api_key)
+        if api_key:
+            st.session_state.api_key = api_key
+        st.caption("Get your key from [console.groq.com](https://console.groq.com)")
+    else:
+        st.caption("Make sure Ollama is running locally")
 
     col1, col2 = st.columns(2)
 
@@ -274,8 +281,7 @@ with st.sidebar:
 
 # Main Interface
 st.title("Indecimal AI Assistant")
-st.caption(f" Data Mode: {st.session_state.current_mode}")
-st.caption("Showing full retrieved chunks for transparency.")
+st.caption(f"📊 Data: {st.session_state.current_mode} | 🤖 Model: {st.session_state.model_provider}")
 # Display Messages
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
@@ -310,7 +316,8 @@ if prompt := st.chat_input("Ask about packages, pricing, or policies..."):
                 response = st.session_state.rag.run(
                     prompt,
                     chat_history=st.session_state.messages,
-                    model_type=st.session_state.model_provider
+                    model_type=st.session_state.model_provider,
+                    api_key=st.session_state.api_key if st.session_state.model_provider == "Groq" else None
                 )
 
                 answer = response["answer"]

@@ -26,20 +26,16 @@ class RAGPipeline:
         results = self.vector_store.search(query_embedding, k=k)
         return results
 
-    def generate_answer(self, query, context_chunks, chat_history=None, model_type="Local (Ollama)"):
+    def generate_answer(self, query, context_chunks, chat_history=None, model_type="Groq", api_key=None):
         if chat_history is None:
             chat_history = []
 
         if not context_chunks:
             return "I don't have enough information to answer that."
 
-        # Prepare Context
         context_text = "\n\n".join([f"[Source: {c['source']}]\n{c['text']}" for c in context_chunks])
-        
-        # Prepare History (Shortened)
         history_text = "\n".join([f"{msg['role'].capitalize()}: {msg['content']}" for msg in chat_history[-2:]])
 
-        # YOUR PREFERRED PROMPT
         system_prompt = f"""You are a RAG assistant for Indecimal. Follow these rules STRICTLY:
         1. ONLY use information from the Context below.
         2. Do NOT use your general knowledge.
@@ -54,18 +50,18 @@ class RAGPipeline:
         {history_text}
         """
         
-        if model_type == "Local (Ollama)":
+        if model_type == "Ollama":
             return self._call_ollama(system_prompt, query)
-        elif model_type == "OpenRouter API":
-            return self._call_openrouter(system_prompt, query)
+        elif model_type == "Groq":
+            return self._call_groq(system_prompt, query, api_key)
         else:
-            return " Error: Invalid Model Type Selected"
+            return "Error: Invalid Model Type Selected"
 
     def _call_ollama(self, system_prompt, query):
         try:
             import ollama
         except ImportError:
-            return " Ollama Error: Missing dependency. Install with `pip install ollama`."
+            return "Ollama not installed. Run: pip install ollama"
         try:
             response = ollama.chat(
                 model=self.model_name,
@@ -76,21 +72,19 @@ class RAGPipeline:
             )
             return response['message']['content']
         except Exception as e:
-            return f" Ollama Error: {str(e)} (Is Ollama running?)"
+            return f"Ollama Error: {str(e)}. Make sure Ollama is running locally."
 
-    def _call_openrouter(self, system_prompt, query):
-        api_key = os.getenv("OPENROUTER_API_KEY")
+    def _call_groq(self, system_prompt, query, api_key):
         if not api_key:
-            return " Error: OpenRouter API Key is missing. Please enter it in the Sidebar."
+            return "Error: Groq API Key is missing. Please enter it in the sidebar."
 
         client = OpenAI(
-            base_url="https://openrouter.ai/api/v1",
+            base_url="https://api.groq.com/openai/v1",
             api_key=api_key,
         )
         try:
-            # Using Mistral 7B as a safe default
             response = client.chat.completions.create(
-                model="mistralai/mistral-7b-instruct", 
+                model="llama-3.1-70b-versatile",
                 messages=[
                     {"role": "system", "content": system_prompt},
                     {"role": "user", "content": query}
@@ -98,14 +92,14 @@ class RAGPipeline:
             )
             return response.choices[0].message.content
         except Exception as e:
-            return f"OpenRouter Error: {str(e)}"
+            return f"Groq Error: {str(e)}"
 
-    def run(self, query, chat_history=None, model_type="Local (Ollama)"):
+    def run(self, query, chat_history=None, model_type="Groq", api_key=None):
         if chat_history is None:
             chat_history = []
             
         retrieved_chunks = self.retrieve(query)
-        answer = self.generate_answer(query, retrieved_chunks, chat_history, model_type)
+        answer = self.generate_answer(query, retrieved_chunks, chat_history, model_type, api_key)
         
         return {
             "answer": answer,
