@@ -223,7 +223,9 @@ with st.sidebar:
 
                     run_indexing_pipeline(docs, "index/custom")
                     st.session_state.rag.load_index("index/custom")
+                    st.session_state.messages = []
                     st.success(f"Indexed {len(docs)} files successfully.")
+                    st.rerun()
 
     else:
 
