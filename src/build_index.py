@@ -40,7 +40,7 @@ def advanced_chunking(text, source_name):
     lines = text.split('\n')
     chunks = []
     
-    current_context = "General"
+    current_context = source_name.split('.')[0]
     current_chunk = []
     current_length = 0
     
@@ -48,29 +48,27 @@ def advanced_chunking(text, source_name):
         line = line.strip()
         if not line: continue
         
-        # 1. Update Context based on Headers
+        # Update Context based on Headers
         if line.startswith("# "):
             current_context = line.replace("# ", "").strip()
         elif line.startswith("## "):
-            main_topic = current_context.split(" > ")[0] # Keep top level
+            main_topic = current_context.split(" > ")[0]
             current_context = f"{main_topic} > {line.replace('## ', '').strip()}"
             
-        # 2. Check size limit
+        # Check size limit
         if current_length + len(line) > CHUNK_SIZE:
             chunk_text = " ".join(current_chunk)
-            
-            # Context Injection (The "Secret Sauce")
             enriched_text = f"[{source_name} | Section: {current_context}]\n{chunk_text}"
             chunks.append(enriched_text)
             
-            # 3. Create Overlap (Keep last ~3 lines)
+            # Create Overlap
             current_chunk = current_chunk[-3:] 
             current_length = sum(len(l) for l in current_chunk)
             
         current_chunk.append(line)
         current_length += len(line)
 
-    # Add the final remaining chunk
+    # Add final chunk
     if current_chunk:
         chunk_text = " ".join(current_chunk)
         enriched_text = f"[{source_name} | Section: {current_context}]\n{chunk_text}"
@@ -82,7 +80,7 @@ def run_indexing_pipeline(input_docs, output_path):
     """
     Reusable function to index ANY list of documents.
     """
-    print(f" Indexing {len(input_docs)} documents to {output_path}...")
+    print(f"Indexing {len(input_docs)} documents to {output_path}...")
     
     embedder = Embedder()
     vector_store = VectorStore(index_path=output_path)
@@ -92,6 +90,7 @@ def run_indexing_pipeline(input_docs, output_path):
 
     for doc in input_docs:
         chunks = advanced_chunking(doc['text'], doc['source'])
+        print(f"Created {len(chunks)} chunks from {doc['source']}")
         for chunk in chunks:
             all_chunks.append(chunk)
             all_metadata.append({
@@ -100,15 +99,15 @@ def run_indexing_pipeline(input_docs, output_path):
             })
 
     if not all_chunks:
-        print(" No valid chunks to index.")
+        print("No valid chunks to index.")
         return
 
-    print(f" Embedding {len(all_chunks)} chunks...")
+    print(f"Embedding {len(all_chunks)} chunks...")
     embeddings = embedder.embed(all_chunks)
 
     vector_store.add(embeddings, all_metadata)
     vector_store.save()
-    print("Indexing Complete")
+    print(f"Indexing Complete - {len(all_chunks)} chunks saved to {output_path}")
 
 if __name__ == "__main__":
     # Default Assignment Mode
